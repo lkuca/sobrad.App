@@ -17,7 +17,12 @@ namespace sobrad.ViewModels
         public ICommand BackCommand { protected set; get; }
 
         FriendViewModel selectedFriend;
-        INavigation Navigation { get; set; }
+
+        public INavigation Navigation { get; set; }
+
+       
+
+
 
         public FriendsListViewModel()
         {
@@ -27,39 +32,6 @@ namespace sobrad.ViewModels
             SaveFriendCommand = new Command(SaveFriend);
             BackCommand = new Command(Back);
         }
-
-        private void DeleteFriend(object friendObject)
-        {
-            FriendViewModel friend = friendObject as FriendViewModel;
-            if(friend != null)
-            {
-                Friends.Remove(friend);
-            }
-            Back();
-        }
-
-        private void Back(object friendObject)
-        {
-            Navigation.PopAsync();
-        }
-
-        private void SaveFriend(object friendObject)
-        {
-            FriendViewModel friend = friendObject as FriendViewModel;
-            if (friend != null && friend.IsValid && !Friends.Contains(friend))
-            {
-                Friends.Add(friend);
-            }
-            Back();
-        }
-
-        
-
-        private void CreateFriend()
-        {
-            Navigation.PushAsync(new FriendPage(new FriendViewModel() { ListViewModel = this}));
-        }
-
         public FriendViewModel SelectedFriend
         {
             get { return selectedFriend; }
@@ -68,9 +40,9 @@ namespace sobrad.ViewModels
                 if (selectedFriend != value)
                 {
                     FriendViewModel tempFriend = value;
-                    selectedFriend= null;
-                    OnPropertyChanged("SelectedFriend");
-                    NavigationEventArgs.PushAsync(new FriendPage(tempFriend));
+                    selectedFriend = null;
+                    OnPropertyChanged("Selectedfriend");
+                    Navigation.PushAsync(new FriendPage(tempFriend));
                 }
             }
         }
@@ -81,6 +53,43 @@ namespace sobrad.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        private void CreateFriend()
+        {
+            Navigation.PushAsync(new FriendPage(new FriendViewModel() { ListViewModel = this }));
+        }
+        private void Back()
+        {
+            Navigation.PopAsync();
+        }
+        private void SaveFriend(object friendObject)
+        {
+            FriendViewModel friend = friendObject as FriendViewModel;
+            if (friend != null && friend.IsValid && !Friends.Contains(friend))
+            {
+                Friends.Add(friend);
+            }
+            Back();
+        }
+        private void DeleteFriend(object friendObject)
+        {
+            FriendViewModel friend = friendObject as FriendViewModel;
+            if(friend != null)
+            {
+                Friends.Remove(friend);
+            }
+            Back();
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+        
         
     }
 }
